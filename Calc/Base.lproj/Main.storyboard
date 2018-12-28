@@ -51,7 +51,7 @@
                                     <color key="titleColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                                 </state>
                                 <connections>
-                                    <action selector="otherActs:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DO5-fv-kcp"/>
+                                    <action selector="equals:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DO5-fv-kcp"/>
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fRY-Pr-cSk">
@@ -232,6 +232,9 @@
                                 <state key="normal" title="+/-">
                                     <color key="titleColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
                                 </state>
+                                <connections>
+                                    <action selector="plusMinus:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sPQ-pl-YKj"/>
+                                </connections>
                             </button>
                             <button opaque="NO" tag="16" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ll-EY-7UR">
                                 <rect key="frame" x="94" y="198" width="93" height="93"/>

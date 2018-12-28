@@ -30,8 +30,12 @@ class ViewController: UIViewController {
     }
     
     @IBAction func digits(_ sender: UIButton) {
-        if result.text!.count < 8 {
-            if !strMBClrd{
+        if result.text!.count < 8  {
+            if result.text == "-" && sender.tag == 0{
+                result.text = "0"
+                strMBClrd = true
+            }
+            else if !strMBClrd {
                 result.text = result.text! + String(sender.tag)
             }
             else {
@@ -58,13 +62,34 @@ class ViewController: UIViewController {
         strMBClrd = true
     }
     
-    @IBAction func otherActs(_ sender: UIButton) {
+    @IBAction func equals(_ sender: UIButton) {
         if lastAction != 0{
             calculating(act: lastAction)
             strMBClrd = true
             actSec = false
         }
     }
+    
+    @IBAction func plusMinus(_ sender: UIButton) {
+        if result.text == "-"{
+            result.text = "0"
+            strMBClrd = true
+            numberFromScreen = Double(result.text!)!
+        }
+        else if result.text!.hasPrefix("-"){
+            result.text!.removeFirst()
+            numberFromScreen = Double(result.text!)!
+        }
+        else if strMBClrd && result.text == "0"{
+            result.text = "-"
+            strMBClrd = false
+        }
+        else{
+            result.text = "-" + result.text!
+            numberFromScreen = Double(result.text!)!
+        }
+    }
+    
     
     @IBAction func clearing(_ sender: UIButton) {
         firstNum = 0
@@ -86,7 +111,10 @@ class ViewController: UIViewController {
             result.text = "0"
             strMBClrd = true
         }
-        numberFromScreen = Double(result.text!)!
+        if result.text != "-"{
+            numberFromScreen = Double(result.text!)!
+        }
+        ostatok.text = ""
     }
     
     func calculating( act: Int){
