@@ -8,20 +8,55 @@
 
 import UIKit
 
+class ResponsiveView: UIView{
+    override var canBecomeFirstResponder: Bool{
+        return true
+    }
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var fNum: UILabel!
     @IBOutlet weak var action: UILabel!
     @IBOutlet weak var result: UILabel!
     @IBOutlet weak var clrbutton: UIButton!
-    var numberFromScreen:Float = 0
-    var firstNum:Float = 0
+    var numberFromScreen:Double = 0
+    var firstNum:Double = 0
     var lastAction:Int = 0
     var strMBClrd = true
-    var actSec = false
+    var responsiveView: ResponsiveView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        responsiveView = ResponsiveView()
+        
+        responsiveView.frame = result.frame
+        self.view.addSubview(responsiveView)
+        
+        responsiveView.isUserInteractionEnabled = true
+        let longPressGR = UILongPressGestureRecognizer(target: self, action: #selector(longPressHandler))
+        longPressGR.minimumPressDuration = 0.3
+        responsiveView.addGestureRecognizer(longPressGR)
+    }
+    
+    @objc func longPressHandler(sender: UILongPressGestureRecognizer){
+        guard sender.state == .began,
+            let senderView = sender.view,
+            let superView = sender.view?.superview
+            else { return }
+        
+        senderView.becomeFirstResponder()
+        
+        let copyMenyItem = UIMenuItem(title: "Скопировать", action: #selector(copyTapped))
+        UIMenuController.shared.menuItems = [copyMenyItem]
+        UIMenuController.shared.setTargetRect(CGRect(origin: sender.location(in: superView), size: CGSize(width: 1, height: 1)), in: superView)
+        UIMenuController.shared.setMenuVisible(true, animated: true)
+    }
+    
+    @objc func copyTapped(){
+        UIPasteboard.general.string = result.text!
+        responsiveView.resignFirstResponder()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
@@ -29,7 +64,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func digits(_ sender: UIButton) {
-        if result.text!.count < 10 || strMBClrd{
+        if result.text!.count < 15 || strMBClrd{
             if result.text == "-" && sender.tag == 0{
                 result.text = "0"
                 strMBClrd = true
@@ -44,30 +79,35 @@ class ViewController: UIViewController {
                     strMBClrd = false
                 }
                 if !action.text!.isEmpty{
-                    fNum.text = String(firstNum)
+                    showVar(label: fNum, number: &firstNum)
                 }
             }
-            numberFromScreen = Float(result.text!)!
-            actSec = false
+            numberFromScreen = Double(result.text!)!
         }
     }
     
     @IBAction func buttons(_ sender: UIButton) {
         action.text = sender.title(for: .normal)
-        if firstNum == 0 || !actSec{
+        if firstNum == 0 {
             firstNum = numberFromScreen
-            fNum.text = String(firstNum)
+            showVar(label: fNum, number: &firstNum)
         }
-        actSec = true
         lastAction = sender.tag
         strMBClrd = true
     }
     
+    @IBAction func percent(_ sender: UIButton) {
+        if firstNum != 0{
+            numberFromScreen = (firstNum * numberFromScreen) / 100
+            showVar(label: result, number: &numberFromScreen)
+            strMBClrd = true
+        }
+    }
+    
     @IBAction func equals(_ sender: UIButton) {
-        if lastAction != 0{
+        if lastAction != 0 {
             calculating(act: lastAction)
             strMBClrd = true
-            actSec = false
         }
     }
     
@@ -75,11 +115,11 @@ class ViewController: UIViewController {
         if result.text == "-"{
             result.text = "0"
             strMBClrd = true
-            numberFromScreen = Float(result.text!)!
+            numberFromScreen = Double(result.text!)!
         }
         else if result.text!.hasPrefix("-"){
             result.text!.removeFirst()
-            numberFromScreen = Float(result.text!)!
+            numberFromScreen = Double(result.text!)!
         }
         else if strMBClrd && result.text == "0"{
             result.text = "-"
@@ -87,16 +127,19 @@ class ViewController: UIViewController {
         }
         else{
             result.text = "-" + result.text!
-            numberFromScreen = Float(result.text!)!
+            numberFromScreen = Double(result.text!)!
         }
     }
     
     @IBAction func putADot(_ sender: UIButton) {
-        if !result.text!.hasSuffix("."){
+        if !result.text!.contains(".") && !result.text!.contains("n"){
+            sender.showsTouchWhenHighlighted = true
             result.text! += "."
-            numberFromScreen = Float(result.text!)!
+            numberFromScreen = Double(result.text!)!
             strMBClrd = false
-            actSec = false
+        }
+        else{
+            sender.showsTouchWhenHighlighted = false
         }
     }
     
@@ -108,12 +151,11 @@ class ViewController: UIViewController {
         clrbutton.setTitle("AC", for: .normal)
         result.text = "0"
         numberFromScreen = 0
-        actSec = false
         strMBClrd = true
     }
     
     @IBAction func oneCharClr(_ sender: UIButton) {
-        if result.text!.count > 1 && !result.text!.contains("e") && !result.text!.contains("ч"){
+        if result.text!.count > 1 && !result.text!.contains("n"){
             result.text!.removeLast()
         }
         else {
@@ -121,9 +163,11 @@ class ViewController: UIViewController {
             strMBClrd = true
         }
         if result.text != "-"{
-            numberFromScreen = Float(result.text!)!
+            numberFromScreen = Double(result.text!)!
+            if firstNum != 0{
+                showVar(label: fNum, number: &firstNum)
+            }
         }
-        actSec = false
     }
     
     func calculating( act: Int){
@@ -143,26 +187,16 @@ class ViewController: UIViewController {
         default:
             break
         }
-        
-        if (firstNum >= 10000000000) || (firstNum <= -1000000000) {
-            result.text = String(firstNum)
+        showVar(label: result, number: &firstNum)
+        fNum.text = ""
+    }
+    
+    func showVar(label: UILabel, number: inout Double){
+        if number.truncatingRemainder(dividingBy: 1) == 0 && number < 1.0e16{
+            label.text = String(Int64(number))
         }
         else {
-            if firstNum.truncatingRemainder(dividingBy: 1) == 0{
-                result.text = String(Int(firstNum))
-            }
-            else {
-                result.text = String(firstNum)
-            }
+            label.text = String(Double(number))
         }
-        switch result.text {
-        case "nan", "inf":
-            result.text = "Не число"
-            break
-        default:
-            break
-        }
-        fNum.text = ""
-        numberFromScreen = Float(result.text!)!
     }
 }
