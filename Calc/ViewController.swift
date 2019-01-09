@@ -20,12 +20,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var action: UILabel!
     @IBOutlet weak var result: UILabel!
     @IBOutlet weak var clrbutton: UIButton!
-    var numberFromScreen:Double = 0
-    var firstNum:Double = 0
+    var numberFromScreen:Decimal = 0
+    var firstNum:Decimal = 0
     var lastAction:Int = 0
     var strMBClrd = true
     var responsiveView: ResponsiveView!
-
+    @IBOutlet weak var messageText: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,7 +65,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func digits(_ sender: UIButton) {
-        if result.text!.count < 15 || strMBClrd{
+        if result.text!.count < 19 || strMBClrd{
             if result.text == "-" && sender.tag == 0{
                 result.text = "0"
                 strMBClrd = true
@@ -82,7 +83,7 @@ class ViewController: UIViewController {
                     showVar(label: fNum, number: &firstNum)
                 }
             }
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
         }
     }
     
@@ -115,11 +116,11 @@ class ViewController: UIViewController {
         if result.text == "-"{
             result.text = "0"
             strMBClrd = true
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
         }
         else if result.text!.hasPrefix("-"){
             result.text!.removeFirst()
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
         }
         else if strMBClrd && result.text == "0"{
             result.text = "-"
@@ -127,15 +128,15 @@ class ViewController: UIViewController {
         }
         else{
             result.text = "-" + result.text!
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
         }
     }
     
     @IBAction func putADot(_ sender: UIButton) {
-        if !result.text!.contains(".") && !result.text!.contains("n"){
+        if !result.text!.contains(".") && !result.text!.contains("a"){
             sender.showsTouchWhenHighlighted = true
             result.text! += "."
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
             strMBClrd = false
         }
         else{
@@ -152,18 +153,20 @@ class ViewController: UIViewController {
         result.text = "0"
         numberFromScreen = 0
         strMBClrd = true
+        messageText.isHidden = true
     }
     
     @IBAction func oneCharClr(_ sender: UIButton) {
-        if result.text!.count > 1 && !result.text!.contains("n"){
+        if result.text!.count > 1 && !result.text!.contains("a"){
             result.text!.removeLast()
+            strMBClrd = false
         }
         else {
             result.text = "0"
             strMBClrd = true
         }
         if result.text != "-"{
-            numberFromScreen = Double(result.text!)!
+            numberFromScreen = Decimal(string: result.text!)!
             if firstNum != 0{
                 showVar(label: fNum, number: &firstNum)
             }
@@ -191,12 +194,14 @@ class ViewController: UIViewController {
         fNum.text = ""
     }
     
-    func showVar(label: UILabel, number: inout Double){
-        if number.truncatingRemainder(dividingBy: 1) == 0 && number < 1.0e16{
-            label.text = String(Int64(number))
+    func showVar(label: UILabel, number: inout Decimal){
+        if number.description.count < 20{
+            label.text = number.description
         }
-        else {
-            label.text = String(Double(number))
+        else{
+            label.text = String(number.description.prefix(20))
+            number = Decimal(string: label.text!)!
+            messageText.isHidden = false
         }
     }
 }

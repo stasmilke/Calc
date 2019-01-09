@@ -302,6 +302,15 @@
                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Значение приближено (20 знаков)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkf-FZ-RqG">
+                                <rect key="frame" x="0.0" y="561" width="375" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -310,6 +319,7 @@
                         <outlet property="action" destination="T98-jp-xbx" id="ku6-hB-EAK"/>
                         <outlet property="clrbutton" destination="evz-xY-I7g" id="5p1-ZQ-bAo"/>
                         <outlet property="fNum" destination="gx5-hC-zCI" id="HGD-XM-7ch"/>
+                        <outlet property="messageText" destination="nkf-FZ-RqG" id="IGS-bo-2rE"/>
                         <outlet property="result" destination="cxJ-Q4-rZb" id="J5n-Hf-CM7"/>
                     </connections>
                 </viewController>
