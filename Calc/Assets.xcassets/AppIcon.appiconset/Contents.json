@@ -33,13 +33,13 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Calc Icon11.png",
+      "filename" : "Calc_Icon11.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Calc Icon222.png",
+      "filename" : "Calc_Icon222.png",
       "scale" : "3x"
     },
     {
@@ -90,7 +90,7 @@
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "Calc Icon.png",
+      "filename" : "Calc_Icon.png",
       "scale" : "1x"
     }
   ],
